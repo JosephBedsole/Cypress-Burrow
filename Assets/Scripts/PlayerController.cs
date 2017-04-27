@@ -8,11 +8,24 @@ public class PlayerController : MonoBehaviour {
     public float turnSpeed = 3;
 
     private Animator anim;
+    private HealthController health;
 
     void Start() {
+        health = GetComponent<HealthController>();
+        health.onHealthChanged += AnimateHealth;
         anim = GetComponent<Animator>();
     }
-
+    void AnimateHealth (float health, float prevHealth, float maxHealth)
+    {
+        if (health <= 0)
+        {
+            anim.SetTrigger("dying");
+        }
+        else if (health < prevHealth)
+        {
+            anim.SetTrigger("Hit");
+        }
+    }
     void Update() {
         float x = Input.GetAxis("Horizontal");
         float y = Input.GetAxis("Vertical");
