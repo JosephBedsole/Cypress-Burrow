@@ -40,11 +40,11 @@ public class PlayerController : MonoBehaviour {
         }
         if (Input.GetButtonDown("Fire1"))
         {
-            anim.SetTrigger("Hit");
+            anim.SetTrigger("hurricaneKick");
         }
         if (Input.GetButtonDown("Fire2"))
         {
-            anim.SetTrigger("dying");
+            anim.SetTrigger("dance");
         }
         if (Input.GetButtonDown("Fire3"))
         {
