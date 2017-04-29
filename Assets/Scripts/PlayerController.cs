@@ -46,5 +46,9 @@ public class PlayerController : MonoBehaviour {
         {
             anim.SetTrigger("dying");
         }
+        if (Input.GetButtonDown("Fire3"))
+        {
+            anim.SetTrigger("grab");
+        }
     }
 }
