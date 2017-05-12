@@ -19,7 +19,7 @@ public class DoorOpen : MonoBehaviour {
     {
 		if (near == true)
         {
-            if (open == false)
+            if (!open)
             {
                 if (Input.GetKeyDown(KeyCode.E))
                 {
@@ -31,7 +31,7 @@ public class DoorOpen : MonoBehaviour {
                 }
             }
 
-            else if (open == true)
+            else
             {
                 if (Input.GetKeyDown(KeyCode.E))
                 {
@@ -39,7 +39,7 @@ public class DoorOpen : MonoBehaviour {
                     GameManager.instance.pressEToClose.gameObject.SetActive(false);
                     GameManager.instance.pressEToOpen.gameObject.SetActive(true);
                     // Animation.Play
-                    animator.SetTrigger("PressE");
+                    animator.SetTrigger("pressE");
                     open = false;
                 }
               

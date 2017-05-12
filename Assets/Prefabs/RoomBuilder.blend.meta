@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: e90e01702b924bb4496ff995ef7c52c5
-timeCreated: 1494547332
+guid: 23160b4e80fb34a49b32ba8b8d03b3ef
+timeCreated: 1494548470
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -11,37 +11,42 @@ ModelImporter:
     100006: Cube_003
     100008: Cube_004
     100010: Cube_005
-    100012: Cylinder
-    100014: //RootNode
+    100012: Cube_006
+    100014: Cylinder
+    100016: //RootNode
     400000: Cube
     400002: Cube_001
     400004: Cube_002
     400006: Cube_003
     400008: Cube_004
     400010: Cube_005
-    400012: Cylinder
-    400014: //RootNode
+    400012: Cube_006
+    400014: Cylinder
+    400016: //RootNode
     2300000: Cube
     2300002: Cube_001
     2300004: Cube_002
     2300006: Cube_003
     2300008: Cube_004
     2300010: Cube_005
-    2300012: Cylinder
+    2300012: Cube_006
+    2300014: Cylinder
     3300000: Cube
     3300002: Cube_001
     3300004: Cube_002
     3300006: Cube_003
     3300008: Cube_004
     3300010: Cube_005
-    3300012: Cylinder
-    4300000: Cube_005
-    4300002: Cube_004
-    4300004: Cylinder
-    4300006: Cube_003
-    4300008: Cube_002
-    4300010: Cube_001
-    4300012: Cube
+    3300012: Cube_006
+    3300014: Cylinder
+    4300000: Cube_006
+    4300002: Cube_005
+    4300004: Cube_004
+    4300006: Cylinder
+    4300008: Cube_003
+    4300010: Cube_002
+    4300012: Cube_001
+    4300014: Cube
     7400000: Default Take
     9500000: //RootNode
   materials:

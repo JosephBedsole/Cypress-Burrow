@@ -4,41 +4,20 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour {
 
-//    public float moveSpeed = 1;
-//    public float turnSpeed = 5;
-//    public Transform target;
-//    public Vector3 offset;
-//    public Vector3 lookOffset;
+    public Transform target;
+    public Vector3 offset;
+    public float speed;
 
-//    void Update ()
-//    {
-//        if (target == null)
-//        {
-//            target = GameObject.FindWithTag("Player").transform;
-//            return;
-//        }
+    void Update()
+    {
 
-//#if UNITY_EDITOR
-//        if (!Application.isPlaying)
-//        {
-//            transform.position = target.position + offset;
-//            transform.rotation = Quaternion.LookRotation((target.position + lookOffset) - transform.position 
-//        }
-//        else
-//        {
-//#endif
+        if (target == null) return;
 
-//            transform.position = Vector3.Lerp(
-//                transform.position,
-//                target.position + offset,
-//                Time.deltaTime * moveSpeed
-//                );
-//            transform.rotation = Quaternion.Slerp(
-//                transform.rotation,
-                
-                
-                
-//                )
-//        }
-//    }
+        transform.position = Vector3.Lerp(transform.position, target.position + offset, Time.deltaTime * speed);
+
+
+        transform.LookAt(target);
+
+
+    }
 }
