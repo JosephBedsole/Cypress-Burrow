@@ -17,5 +17,8 @@ public class GameManager : MonoBehaviour {
 
     public Text pressAButton;
     public Text hello;
+    public Text pressEToOpen;
+    public Text pressEToClose;
 
+    private Animator doorOpen;
 }
