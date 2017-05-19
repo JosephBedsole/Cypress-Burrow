@@ -11,7 +11,7 @@ public class HealthController : MonoBehaviour {
     public static event OnAnyHealthChanged onAnyHealthChanged = delegate { };
 
     public float maxHealth = 10;
-    private float health;
+    public float health;
 
 
 	void Start ()
