@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour {
+public class EnemyController : MonoBehaviour
+{
 
     public float maxTurnVelocity = 3.5f;
     public float maxForwardVelocity = 5f;
@@ -10,7 +11,8 @@ public class EnemyController : MonoBehaviour {
     public float maxTurnSpeedChange = 0.3f;
     public float wanderAmount = 1;
     public float preAttackDistance = 4;
-    public float attackDistance = 1;
+   
+    public GameObject weapon;
 
     private Transform target;
     private Animator anim;
@@ -20,52 +22,83 @@ public class EnemyController : MonoBehaviour {
     Vector3 targetVelocity;
     Vector3 targetFacing;
 
-    //Vector3 heading = (target.position - transform.position).normalized;
-    //Vector3 targetVelocity = heading * maxForwardVelocity;
-
-    void Start ()
+    void Start()
     {
         anim = GetComponent<Animator>();
         body = GetComponent<Rigidbody>();
         target = GameObject.FindWithTag("Player").transform;
         StartCoroutine("WanderCoroutine");
-	}
+        health = GetComponent<HealthController>();
+        health.onHealthChanged += AnimateHealth;
+    }
 
-    IEnumerator WanderCoroutine ()
+    void AnimateHealth(float health, float prevHealth, float maxHealth)
     {
-        bool nearTarget = false;
-
-        while(Vector3.Distance(transform.position, target.position) > 5)
+        if (health <= 0)
+        {
+            anim.SetTrigger("dying");
+        }
+        else if (health < prevHealth)
+        {
+            anim.SetTrigger("Hit");
+        }
+    }
+    
+    IEnumerator WanderCoroutine()
+    {
+        while (Vector3.Distance(transform.position, target.position) > 5)
         {
             targetVelocity = transform.forward * maxForwardVelocity + Random.insideUnitSphere * wanderAmount;
             targetFacing = targetVelocity.normalized;
             targetVelocity = transform.right * maxForwardVelocity;
             yield return new WaitForSeconds(.5f);
-
         }
-        StartCoroutine("AttackCoroutine");
 
+        StartCoroutine("AttackCoroutine");
     }
 
-    private bool attacking = false;
-
-    IEnumerator AttackCoroutine ()
+    IEnumerator AttackCoroutine()
     {
+        Debug.Log("AttackCoroutine");
         HealthController playerHealth = target.gameObject.GetComponent<HealthController>();
-        while(playerHealth.health > 0)
+        while ( (playerHealth.health > 0) && (Vector3.Distance(transform.position, target.position) < 10) ) 
         {
-                Vector3 diff = target.position - transform.position;
-                targetFacing = diff.normalized;
-            if (!attacking)
-            {
-                targetVelocity = transform.right * maxSpeedChange + targetFacing * (preAttackDistance - diff.magnitude);
-                yield return new WaitForEndOfFrame();
-            }
-            else
-            {
-                targetVelocity = transform.forward * maxSpeedChange;
-                anim.SetTrigger("attack");
-            }
+            yield return StartCoroutine("CirclePlayerState", 1);
+            yield return StartCoroutine("CirclePlayerState", -1);
+            yield return StartCoroutine("ApproachPlayerState");
+
+            targetVelocity = Vector3.zero;
+            Debug.Log("I'm punching you fool!");
+            weapon.gameObject.SetActive(true);
+            anim.SetTrigger("slashing");
+            yield return new WaitForSeconds(.5f);
+            weapon.gameObject.SetActive(false);
+            
+        }
+    }
+
+    IEnumerator CirclePlayerState(float direction)
+    {
+        Debug.Log("CirclePlayerState " + direction);
+        float startTime = Time.time;
+        while (Time.time - startTime < 3)
+        {
+            Vector3 diff = target.position - transform.position;
+            targetFacing = diff.normalized;
+            targetVelocity = transform.right * maxForwardVelocity * direction + targetFacing * (diff.magnitude - preAttackDistance);
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    IEnumerator ApproachPlayerState()
+    {
+        Debug.Log("ApproachPlayerState");
+        while (Vector3.Distance(transform.position, target.position) > 1)
+        {
+            Vector3 diff = target.position - transform.position;
+            targetFacing = diff.normalized;
+            targetVelocity = transform.forward * maxForwardVelocity;
+            yield return new WaitForEndOfFrame();
         }
     }
 
@@ -78,10 +111,9 @@ public class EnemyController : MonoBehaviour {
         anim.SetFloat("speed", speed);
         anim.SetFloat("forwardVelocity", forward * speed);
         anim.SetFloat("turnVelocity", body.angularVelocity.y);
-
     }
 
-    void FixedUpdate ()
+    void FixedUpdate()
     {
         if (target == null) return;
 
@@ -89,11 +121,19 @@ public class EnemyController : MonoBehaviour {
         velocityChange.y = 0;
         velocityChange = velocityChange.normalized * Mathf.Clamp(velocityChange.magnitude, 0, maxSpeedChange);
         body.AddForce(velocityChange, ForceMode.VelocityChange);
-        
+
 
         float targetTurnSpeed = Vector3.Cross(transform.forward, targetFacing).y * maxTurnVelocity;
         float turnSpeedChange = targetTurnSpeed - body.angularVelocity.y;
         turnSpeedChange = Mathf.Clamp(turnSpeedChange, -maxTurnSpeedChange, maxTurnSpeedChange);
         body.AddTorque(Vector3.up * turnSpeedChange, ForceMode.VelocityChange);
-	}
+    }
+
+    void OnTriggerEnter(Collider c)
+    {
+        if (c.gameObject.tag == ("playerWeapon"))
+        {
+            health.TakeDamage(2);
+        }
+    }
 }

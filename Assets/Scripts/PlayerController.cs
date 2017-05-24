@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-    public float maxTurnVelocity = 3f;
-    public float maxSpeedChange = .3f;
-    public float maxForwardVelocity = 5f;
+    public float maxTurnVelocity = 1f;
+    public float maxSpeedChange = .1f;
+    public float maxForwardVelocity = 0.2f;
     private Animator anim;
     private HealthController health;
     private Rigidbody body;
+    public GameObject weapon;
 
     private Vector3 targetVelocity;
 
@@ -62,7 +63,7 @@ public class PlayerController : MonoBehaviour {
 
         if (Input.GetButtonDown("Jump"))
         {
-            anim.SetTrigger("slashing");
+            StartCoroutine("meleeAttack");
         }
         if (Input.GetButtonDown("Fire1"))
         {
@@ -82,6 +83,18 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    IEnumerator meleeAttack ()
+    {
+        anim.SetTrigger("slashing");
+        maxForwardVelocity = 0;
+        weapon.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(1);
+
+        maxForwardVelocity = 0.2f;
+        weapon.gameObject.SetActive(false);
+    }
+
     void FixedUpdate()
     {
 
@@ -96,9 +109,14 @@ public class PlayerController : MonoBehaviour {
 
         float turnSpeed = Vector3.Cross(transform.forward, heading).y * maxTurnVelocity;
         body.angularVelocity = Vector3.up * turnSpeed;
+    }
 
-
-
+    void OnTriggerEnter(Collider c)
+    {
+        if (c.gameObject.tag == ("enemyWeapon"))
+        {
+            health.TakeDamage(1);
+        }
     }
 
 }
