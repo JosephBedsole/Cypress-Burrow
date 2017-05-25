@@ -24,13 +24,15 @@ public class PlayerController : MonoBehaviour {
 
     void AnimateHealth (float health, float prevHealth, float maxHealth)
     {
-        if (health <= 0)
+        if (health <= 0 && prevHealth > 0)
         {
             anim.SetTrigger("dying");
+            StopAllCoroutines();
+
         }
-        else if (health < prevHealth)
+        else if (health < prevHealth && prevHealth > 0)
         {
-            anim.SetTrigger("Hit");
+            anim.SetTrigger("Hit"); 
         }
     }
 

@@ -11,9 +11,7 @@ public class EnemyController : MonoBehaviour
     public float maxTurnSpeedChange = 0.3f;
     public float wanderAmount = 1;
     public float preAttackDistance = 4;
-
-    bool death = false;
-   
+       
     public GameObject weapon;
 
     private Transform target;
@@ -36,14 +34,14 @@ public class EnemyController : MonoBehaviour
 
     void AnimateHealth(float health, float prevHealth, float maxHealth)
     {
-        if (health <= 0)
+        if (health <= 0 && prevHealth > 0)
         {
             anim.SetTrigger("dying");
             StopAllCoroutines();
-            death = true;
-           
+            weapon.gameObject.SetActive(false);
+
         }
-        else if (health < prevHealth && !death)
+        else if (health < prevHealth && prevHealth > 0)
         {
             anim.SetTrigger("Hit");
         }
@@ -76,7 +74,7 @@ public class EnemyController : MonoBehaviour
             Debug.Log("I'm punching you fool!");
             weapon.gameObject.SetActive(true);
             anim.SetTrigger("slashing");
-            yield return new WaitForSeconds(.5f);
+            yield return new WaitForSeconds(1);
             weapon.gameObject.SetActive(false);
             
         }
