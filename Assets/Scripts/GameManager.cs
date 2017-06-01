@@ -22,14 +22,15 @@ public class GameManager : MonoBehaviour {
     public Text pressEToClose;
 
     public Text pressEToUse;
+    public Text youCantDoThat;
 
     private Animator doorOpen;
 
     // Key Item bools
 
-    public bool hasLever = false;
+    public bool hasLever = true;
     public bool hasWrench = false;
     public bool hasWireCutters = false;
     public bool hasTorch = false;
-    public bool hasKey = false;
+    public bool hasKeyCard = false;
 }

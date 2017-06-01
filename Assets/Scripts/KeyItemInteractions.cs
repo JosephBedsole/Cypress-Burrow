@@ -2,64 +2,48 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(BoxCollider))]
 public class KeyItemInteractions : MonoBehaviour {
 
     public bool near = false;
 
-    public string key;
-
     public Animator animator;
+    public string[] keys;
 
-    void Start()
+    // Change the foreach loops into for loops
+    public bool CanActivate(string[] inventory)
     {
-        animator = GetComponent<Animator>();
+        foreach (string key in keys)
+        {
+            bool found = false;
+            foreach (string item in inventory)
+            {
+                if (key == item)
+                {
+                    Debug.Log("You have the item!");
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) return false;
+            Debug.Log("You didn't have the item!");     
+        }
+        return true;
     }
-
 
     void Update()
     {
         if (near == true)
         {
-            if (key == "Lever")
+            if (CanActivate(new string[] { "keyCard" }))
             {
-                // Make sure the code after  "&&"  is correct;
-                if ((Input.GetKeyDown(KeyCode.E)) && (GameManager.instance.hasLever == true))
+                if (Input.GetKeyDown(KeyCode.E))
                 {
                     GameManager.instance.pressEToUse.gameObject.SetActive(true);
+                    Debug.Log("I worked!");
                     // Animation.Play
-                    animator.SetTrigger("pressE");
+                    animator.Play(0);
                 }
-            }
-            else if (key == "KeyCard")
-            {
-                if ((Input.GetKeyDown(KeyCode.E)) && (GameManager.instance.hasKeyCard == true))
-                {
-                    GameManager.instance.pressEToUse.gameObject.SetActive(true);
-                    // Animation.Play
-                    animator.SetTrigger("pressE");
-                }
-            }
-            else if (key == "WireCutters")
-            {
-                if ((Input.GetKeyDown(KeyCode.E)) && (GameManager.instance.hasWireCutters == true))
-                {
-                    GameManager.instance.pressEToUse.gameObject.SetActive(true);
-                    // Animation.Play
-                    animator.SetTrigger("pressE");
-                }
-            }
-            else if (key == "Torch")
-            {
-                if ((Input.GetKeyDown(KeyCode.E)) && (GameManager.instance.hasTorch == true))
-                {
-                    GameManager.instance.pressEToUse.gameObject.SetActive(true);
-                    // Animation.Play; Burn Something
-                    animator.SetTrigger("pressE");
-                }
-            }
-            else
-            {
-                GameManager.instance.nope.gameObject.SetActive(true);
             }
         }
     }
@@ -78,6 +62,7 @@ public class KeyItemInteractions : MonoBehaviour {
         if (c.gameObject.tag == "Player")
         {
             GameManager.instance.pressEToUse.gameObject.SetActive(false);
+            GameManager.instance.youCantDoThat.gameObject.SetActive(false);
             near = false;
         }
     }
