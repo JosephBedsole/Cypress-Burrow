@@ -8,6 +8,7 @@ public class KeyItemInteractions : MonoBehaviour {
     public bool near = false;
 
     public Animator animator;
+    public string animation;
     public string[] keys;
 
     // Change the foreach loops into for loops
@@ -35,14 +36,14 @@ public class KeyItemInteractions : MonoBehaviour {
     {
         if (near == true)
         {
-            if (CanActivate(new string[] { "keyCard" }))
+            if (CanActivate(new string[] { "KeyCard" }))
             {
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     GameManager.instance.pressEToUse.gameObject.SetActive(true);
                     Debug.Log("I worked!");
                     // Animation.Play
-                    animator.Play(0);
+                    animator.Play(animation);
                 }
             }
         }
