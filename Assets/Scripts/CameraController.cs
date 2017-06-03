@@ -28,7 +28,7 @@ public class CameraController : MonoBehaviour {
 
         transform.position = Vector3.Lerp(
             transform.position, 
-            target.position + target.right * offset.x + target.up * offset.y + target.forward * offset.z, 
+            target.position + offset,// target.right * offset.x + target.up * offset.y + target.forward * offset.z, 
             Time.deltaTime * moveSpeed
             );
 

@@ -88,12 +88,11 @@ public class PlayerController : MonoBehaviour {
     IEnumerator meleeAttack ()
     {
         anim.SetTrigger("slashing");
-        maxForwardVelocity = 0;
+        targetVelocity = Vector3.zero;
         weapon.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(1);
 
-        maxForwardVelocity = 0.2f;
         weapon.gameObject.SetActive(false);
     }
 
@@ -105,9 +104,9 @@ public class PlayerController : MonoBehaviour {
         float speed = v.magnitude;
 
         Vector3 velocityChange = targetVelocity - v;
-        velocityChange = velocityChange.normalized * Mathf.Clamp(velocityChange.magnitude, -maxSpeedChange, maxSpeedChange);
+        velocityChange = velocityChange.normalized * Mathf.Clamp(velocityChange.magnitude, 0, maxSpeedChange);
         velocityChange.y = 0;
-        body.AddForce(targetVelocity, ForceMode.VelocityChange);
+        body.AddForce(velocityChange, ForceMode.VelocityChange);
 
         float turnSpeed = Vector3.Cross(transform.forward, heading).y * maxTurnVelocity;
         body.angularVelocity = Vector3.up * turnSpeed;
