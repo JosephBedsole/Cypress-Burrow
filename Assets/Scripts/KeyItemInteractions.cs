@@ -11,6 +11,16 @@ public class KeyItemInteractions : MonoBehaviour {
     public string animation;
     public string[] keys;
 
+    public GameObject thing;
+
+    public void activeOrNotActive()
+    {
+        if (thing == null)
+        {
+            animator.Play(animation);
+        }
+    }
+
     // Change the foreach loops into for loops
     public bool CanActivate(string[] inventory)
     {
@@ -34,6 +44,8 @@ public class KeyItemInteractions : MonoBehaviour {
 
     void Update()
     {
+        activeOrNotActive();
+
         if (near == true)
         {
             if (CanActivate(new string[] { "KeyCard" }))
