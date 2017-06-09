@@ -7,6 +7,7 @@ TagManager:
   - fire
   - playerWeapon
   - enemyWeapon
+  - Slime
   layers:
   - Default
   - TransparentFX

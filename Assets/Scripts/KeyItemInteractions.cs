@@ -6,25 +6,16 @@ using UnityEngine;
 public class KeyItemInteractions : MonoBehaviour {
 
     public bool near = false;
-
     public Animator animator;
     public string animation;
-    public string[] keys;
+    public string[] keysRequired;
 
-    public GameObject thing;
-
-    public void activeOrNotActive()
-    {
-        if (thing == null)
-        {
-            animator.Play(animation);
-        }
-    }
+    public string[] itemsToAdd;
 
     // Change the foreach loops into for loops
     public bool CanActivate(string[] inventory)
     {
-        foreach (string key in keys)
+        foreach (string key in keysRequired)
         {
             bool found = false;
             foreach (string item in inventory)
@@ -44,8 +35,6 @@ public class KeyItemInteractions : MonoBehaviour {
 
     void Update()
     {
-        activeOrNotActive();
-
         if (near == true)
         {
             if (CanActivate(new string[] { "KeyCard" }))

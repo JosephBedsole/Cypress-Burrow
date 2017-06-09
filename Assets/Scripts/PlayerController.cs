@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
+    //Global Variables
+
     public float maxTurnVelocity = 1f;
     public float maxSpeedChange = .1f;
     public float maxForwardVelocity = 0.2f;
+    private Vector3 targetVelocity;
+
     private Animator anim;
     private HealthController health;
     private Rigidbody body;
-    public GameObject weapon;
 
-    private Vector3 targetVelocity;
+    public GameObject weapon;
+    public GameObject slime;
+
+    public bool inContact = false;
+
+    
 
     void Start() {
         health = GetComponent<HealthController>();
@@ -20,25 +28,12 @@ public class PlayerController : MonoBehaviour {
 
         anim = GetComponent<Animator>();
         body = GetComponent<Rigidbody>();
-    }
 
-    void AnimateHealth (float health, float prevHealth, float maxHealth)
-    {
-        if (health <= 0 && prevHealth > 0)
-        {
-            anim.SetTrigger("dying");
-            StopAllCoroutines();
-
-        }
-        else if (health < prevHealth && prevHealth > 0)
-        {
-            anim.SetTrigger("Hit"); 
-        }
     }
 
     void Update() {
         Transform cam = Camera.main.transform;
-        Vector3 targetRight= Input.GetAxis("Horizontal") * cam.right;
+        Vector3 targetRight = Input.GetAxis("Horizontal") * cam.right;
         Vector3 targetForward = Input.GetAxis("Vertical") * cam.forward;
 
         targetVelocity = targetRight + targetForward;
@@ -71,10 +66,6 @@ public class PlayerController : MonoBehaviour {
         {
             anim.SetTrigger("hurricaneKick");
         }
-        if (Input.GetButtonDown("Fire2"))
-        {
-            anim.SetTrigger("dance");
-        }
         if (Input.GetButtonDown("Fire3"))
         {
             anim.SetTrigger("grab");
@@ -83,17 +74,6 @@ public class PlayerController : MonoBehaviour {
         {
             anim.SetTrigger("pressE");
         }
-    }
-
-    IEnumerator meleeAttack ()
-    {
-        anim.SetTrigger("slashing");
-        targetVelocity = Vector3.zero;
-        weapon.gameObject.SetActive(true);
-
-        yield return new WaitForSeconds(1);
-
-        weapon.gameObject.SetActive(false);
     }
 
     void FixedUpdate()
@@ -112,12 +92,70 @@ public class PlayerController : MonoBehaviour {
         body.angularVelocity = Vector3.up * turnSpeed;
     }
 
+    void AnimateHealth(float health, float prevHealth, float maxHealth)
+    {
+        if (health <= 0 && prevHealth > 0)
+        {
+            anim.SetTrigger("dying");
+            StopAllCoroutines();
+
+        }
+        else if (health < prevHealth && prevHealth > 0)
+        {
+            anim.SetTrigger("Hit");
+        }
+    }
+
+    private void OnCollisionEnter(Collision c)
+    {
+        if (c.gameObject.tag == "Slime")
+        {
+            health.TakeDamage(1);
+        }
+    }
+
     void OnTriggerEnter(Collider c)
     {
         if (c.gameObject.tag == ("enemyWeapon"))
         {
             health.TakeDamage(1);
         }
+
+        //if (c.gameObject.tag == "Slime" && !inContact)
+        //{
+        //    Debug.Log("Hello! to you sir");
+        //    inContact = true;
+        //    StartCoroutine("SlimeDamage");
+        //}
     }
 
+    //private void OnTriggerExit(Collider c)
+    //{
+    //    if (c.gameObject.tag == "Slime" && inContact)
+    //    {
+    //        inContact = false;
+    //        StopCoroutine("SlimeDamage");
+    //    }
+    //}
+
+    IEnumerator meleeAttack()
+    {
+        anim.SetTrigger("slashing");
+        targetVelocity = Vector3.zero;
+        weapon.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(1);
+
+        weapon.gameObject.SetActive(false);
+    }
+    // This Coroutine has not been started yet! Start it when you know what you are doing!
+    IEnumerator SlimeDamage()
+    {
+        while (inContact)
+        {
+            Debug.Log("I'm damaging you!");
+            health.TakeDamage(1);
+            yield return new WaitForSeconds(5);
+        }
+    } 
 }

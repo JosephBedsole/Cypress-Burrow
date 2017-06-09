@@ -11,7 +11,6 @@ public class MiniGlowingSlimes : MonoBehaviour {
     public float wanderAmount = 1;
     public float preAttackDistance = 4;
 
-    public float speed = 3;
     public float lookAhead = 0;
 
     public Transform player;
@@ -50,7 +49,7 @@ public class MiniGlowingSlimes : MonoBehaviour {
         {
             Vector3 diff = player.position - transform.position;
             targetFacing = diff.normalized;
-            targetVelocity = transform.forward * speed;
+            targetVelocity = transform.forward * maxForwardVelocity;
 
 
             yield return new WaitForEndOfFrame();
@@ -61,7 +60,7 @@ public class MiniGlowingSlimes : MonoBehaviour {
     {
         Vector3 target = player.transform.position;
         Vector3 heading = (target - (Vector3)transform.position).normalized;
-        body.velocity = heading * speed;
+        body.velocity = heading * maxForwardVelocity;
 
         
     }
@@ -84,6 +83,7 @@ public class MiniGlowingSlimes : MonoBehaviour {
 
     IEnumerator KnockBack ()
     {
+
         yield return new WaitForSeconds(.5f);
     }
 
