@@ -73,6 +73,7 @@ public class EnemyController : MonoBehaviour
             targetVelocity = Vector3.zero;
             Debug.Log("I'm punching you fool!");
             weapon.gameObject.SetActive(true);
+            AudioManager.PlayVariedEffect("Whoosh", 1f);
             anim.SetTrigger("slashing");
             yield return new WaitForSeconds(1);
             weapon.gameObject.SetActive(false);
@@ -136,6 +137,7 @@ public class EnemyController : MonoBehaviour
     {
         if (c.gameObject.tag == ("playerWeapon"))
         {
+            AudioManager.PlayVariedEffect("Slap", 0.1f);
             health.TakeDamage(2);
         }
     }

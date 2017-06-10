@@ -8,6 +8,7 @@ TagManager:
   - playerWeapon
   - enemyWeapon
   - Slime
+  - RotatingBlades
   layers:
   - Default
   - TransparentFX

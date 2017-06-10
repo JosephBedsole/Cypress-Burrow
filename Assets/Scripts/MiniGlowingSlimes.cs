@@ -11,14 +11,19 @@ public class MiniGlowingSlimes : MonoBehaviour {
     public float wanderAmount = 1;
     public float preAttackDistance = 4;
 
+    public float knockBack = 20f;
+
     public float lookAhead = 0;
 
     public Transform player;
     private HealthController health;   
     private Rigidbody body;
+    public ParticleSystem splatter;
 
     Vector3 targetVelocity;
     Vector3 targetFacing;
+
+    private bool recovering;
 
     void Start()
     {
@@ -35,6 +40,11 @@ public class MiniGlowingSlimes : MonoBehaviour {
         if (health <= 0 && prevHealth > 0)
         {
             gameObject.SetActive(false);
+            AudioManager.PlayVariedEffect("Gore", 0.1f);
+            ParticleSystem splat = Instantiate(splatter);
+            splat.Stop();
+            splat.transform.position = transform.position;
+            splat.Play();
             // Instantiate blob puddle
         }
         else if (health < prevHealth && prevHealth > 0)
@@ -58,6 +68,8 @@ public class MiniGlowingSlimes : MonoBehaviour {
 
     void Update()
     {
+        if (player == null || recovering) return;
+
         Vector3 target = player.transform.position;
         Vector3 heading = (target - (Vector3)transform.position).normalized;
         body.velocity = heading * maxForwardVelocity;
@@ -67,7 +79,7 @@ public class MiniGlowingSlimes : MonoBehaviour {
 
     void FixedUpdate()
     {
-        if (player  == null) return;
+        if (player  == null || recovering) return;
 
         Vector3 velocityChange = targetVelocity - body.velocity;
         velocityChange.y = 0;
@@ -81,18 +93,25 @@ public class MiniGlowingSlimes : MonoBehaviour {
         body.AddTorque(Vector3.up * turnSpeedChange, ForceMode.VelocityChange);
     }
 
-    IEnumerator KnockBack ()
-    {
-
-        yield return new WaitForSeconds(.5f);
-    }
-
     private void OnTriggerEnter(Collider c)
     {
         if (c.gameObject.tag == "playerWeapon")
         {
-            StartCoroutine("KnockBack");
+            // (Enemy position - player position).normalized * knockBack
+            body.AddForce( (transform.position - player.transform.position).normalized * knockBack, ForceMode.Impulse);
+            StartCoroutine("KnockBackRecovery");
+
+            AudioManager.PlayVariedEffect("Slap", 0.1f);
+
             health.TakeDamage(2);
         }
+    }
+
+    IEnumerator KnockBackRecovery ()
+    {
+        recovering = true;
+        Debug.Log("I'm Recovering!");
+        yield return new WaitForSeconds(1);
+        recovering = false;
     }
 }

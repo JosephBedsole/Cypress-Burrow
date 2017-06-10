@@ -4,18 +4,26 @@ using UnityEngine;
 
 public class PlayerInventory : MonoBehaviour {
 
-    public string[] inventory;
+    public static PlayerInventory instance;
 
-    KeyItemInteractions keyItem;
+    private void OnEnable()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
+    // first part declares the code / after " = " / you're creating the code
+    public List<string> inventory = new List<string>();
 
     void Start()
     {
-        keyItem = GetComponent<KeyItemInteractions>();
     }
 
-    void GetItem()
+    public void AddItems(string[] itemsToAdd)
     {
-       // inventory.AddRange(keyItem.itemsToAdd);
+        // array.AddRange requires a List to ADD to!
+        inventory.AddRange(itemsToAdd);
     }
 
 }

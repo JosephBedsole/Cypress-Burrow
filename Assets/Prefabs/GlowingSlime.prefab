@@ -238,8 +238,10 @@ MonoBehaviour:
   maxTurnSpeedChange: 0.3
   wanderAmount: 1
   preAttackDistance: 4
+  knockBack: 20
   lookAhead: 0
   player: {fileID: 0}
+  splatter: {fileID: 0}
 --- !u!114 &114715369781651208
 MonoBehaviour:
   m_ObjectHideFlags: 1
