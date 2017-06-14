@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(BoxCollider))]
 public class KeyItemInteractions : MonoBehaviour {
@@ -10,22 +11,18 @@ public class KeyItemInteractions : MonoBehaviour {
     public Animator animator;
 
     public string animation;
+    public Text textToShow;
 
     public List<string> keysRequired;
-    public string[] keysToNeed;
     public string[] itemsToAdd;
 
-    void Start()
-    {
-        // Adding the keys from the array to the List
-        List<string> keysRequired = new List<string>();
-        keysRequired.AddRange(keysToNeed);
-    }
 
 
     //Change the foreach loops into for loops
     public bool CanActivate()
     {
+        Debug.Log("Required count: " + keysRequired.Count);
+        Debug.Log("inventory count: " + PlayerInventory.instance.inventory.Count);
         foreach (string key in keysRequired)
         {
             bool found = false;
@@ -35,13 +32,16 @@ public class KeyItemInteractions : MonoBehaviour {
                 {
                     Debug.Log("You have the item!");
                     found = true;
-                    break;
                 }
             }
-            if (!found) return false;
-            Debug.Log("You didn't have the item!");
+            if (!found)
+            {
+                return false;
+            }
+            
         }
         return true;
+
     }
 
     void Update()
@@ -53,10 +53,10 @@ public class KeyItemInteractions : MonoBehaviour {
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     AudioManager.PlayVariedEffect("PressButton", 0.1f);
-                    GameManager.instance.pressEToUse.gameObject.SetActive(true);
                     Debug.Log("I worked!");
                     // Animation.Play
                     animator.Play(animation);
+                    StartCoroutine("DisplayText");
 
                     PlayerInventory.instance.AddItems(itemsToAdd);
                 }
@@ -83,4 +83,11 @@ public class KeyItemInteractions : MonoBehaviour {
         }
     }
 
+    IEnumerator DisplayText()
+    {
+        GameManager.instance.pressEToUse.gameObject.SetActive(false);
+        textToShow.gameObject.SetActive(true);
+        yield return new WaitForSeconds(3);
+        textToShow.gameObject.SetActive(false);
+    }
 }

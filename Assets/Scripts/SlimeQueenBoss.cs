@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SlimeQueenBoss : MonoBehaviour {
 
@@ -10,19 +11,22 @@ public class SlimeQueenBoss : MonoBehaviour {
     public float maxTurnSpeedChange = 0.3f;
     public float wanderAmount = 1;
     public float preAttackDistance = 4;
-    public float slingVelocity = 10;
+    public float slingVelocity = 10f;
 
     public float knockBack = 20f;
 
     public float lookAhead = 0;
 
     public Transform player;
-    public Transform target;
     private HealthController health;
     private Rigidbody body;
+    public ParticleSystem splatter;
 
     Vector3 targetVelocity;
     Vector3 targetFacing;
+    public string[] itemsToAdd;
+
+    public Text textToShow;
 
     private bool recovering;
 
@@ -31,9 +35,8 @@ public class SlimeQueenBoss : MonoBehaviour {
         body = GetComponent<Rigidbody>();
         health = GetComponent<HealthController>();
         health.onHealthChanged += AnimateHealth;
-        target = GameObject.FindWithTag("Player").transform;
         StartCoroutine("AttackCoroutine");
-        StartCoroutine("Chase");
+        
     }
 
     void AnimateHealth(float health, float prevHealth, float maxHealth)
@@ -41,7 +44,13 @@ public class SlimeQueenBoss : MonoBehaviour {
         if (health <= 0 && prevHealth > 0)
         {
             gameObject.SetActive(false);
-            // Instantiate blob puddle
+            AudioManager.PlayVariedEffect("Gore", 0.1f);
+            ParticleSystem splat = Instantiate(splatter);
+            splat.Stop();
+            splat.transform.position = transform.position;
+            splat.Play();
+            StartCoroutine("DisplayText");
+            PlayerInventory.instance.AddItems(itemsToAdd);
         }
         else if (health < prevHealth && prevHealth > 0)
         {
@@ -49,25 +58,18 @@ public class SlimeQueenBoss : MonoBehaviour {
         }
     }
 
-    IEnumerator Chase()
-    {
-        while (Vector3.Distance(transform.position, player.position) < 5)
-        {
-            Vector3 diff = player.position - transform.position;
-            targetFacing = diff.normalized;
-            targetVelocity = transform.forward * maxForwardVelocity;
-
-
-            yield return new WaitForEndOfFrame();
-        }
-    }
-
     void Update()
     {
+        if (player == null || recovering) return;
+
+        Vector3 diff = player.position - transform.position;
+        targetFacing = diff.normalized;
 
         Vector3 target = player.transform.position;
         Vector3 heading = (target - (Vector3)transform.position).normalized;
         body.velocity = heading * maxForwardVelocity;
+
+
     }
 
     void FixedUpdate()
@@ -94,6 +96,8 @@ public class SlimeQueenBoss : MonoBehaviour {
             body.AddForce((transform.position - player.transform.position).normalized * knockBack, ForceMode.Impulse);
             StartCoroutine("KnockBackRecovery");
 
+            AudioManager.PlayVariedEffect("Slap", 0.1f);
+
             health.TakeDamage(2);
         }
     }
@@ -102,20 +106,17 @@ public class SlimeQueenBoss : MonoBehaviour {
     {
         recovering = true;
         Debug.Log("I'm Recovering!");
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1);
         recovering = false;
     }
 
-    IEnumerator AttackCoroutine ()
+    IEnumerator AttackCoroutine()
     {
-        HealthController playerHealth = target.gameObject.GetComponent<HealthController>();
-        while ((playerHealth.health > 0) && (Vector3.Distance(transform.position, target.position) < 10))
+        HealthController playerHealth = player.gameObject.GetComponent<HealthController>();
+        while ((playerHealth.health > 0)) //&& (Vector3.Distance(transform.position, player.position) < 10))
         {
+            Debug.Log("The player is close to me");
             yield return new WaitForSeconds(10);
-            StartCoroutine("SlingAttack");
-            yield return new WaitForSeconds(5);
-            StartCoroutine("SlingAttack");
-            yield return new WaitForSeconds(5);
             StartCoroutine("SlingAttack");
             yield return new WaitForSeconds(5);
             StartCoroutine("JumpAttack");
@@ -124,14 +125,21 @@ public class SlimeQueenBoss : MonoBehaviour {
 
     IEnumerator SlingAttack()
     {
-        StartCoroutine("KnockBackRecovery");
-        // Play the SlingShotAnim
-        body.velocity = transform.forward * slingVelocity;
-        yield return new WaitForEndOfFrame();
+        int count = 2;
+        for (int i = 0; i < count; ++i)
+        {
+            Debug.Log("SlingAttack");
+            recovering = true;
+            yield return new WaitForSeconds(1);
+            // Play the SlingShotAnim
+            body.velocity = transform.forward * slingVelocity;
+            yield return new WaitForSeconds(2);
+        }
     }
 
     IEnumerator JumpAttack()
     {
+        Debug.Log("JumpAttack");
         recovering = true;
         // Play the JumpAnim
         yield return new WaitForSeconds(1);
@@ -140,5 +148,13 @@ public class SlimeQueenBoss : MonoBehaviour {
         recovering = true;
         yield return new WaitForSeconds(1);
         recovering = false;
+    }
+
+    IEnumerator DisplayText()
+    {
+        GameManager.instance.pressEToUse.gameObject.SetActive(false);
+        textToShow.gameObject.SetActive(true);
+        yield return new WaitForSeconds(3);
+        textToShow.gameObject.SetActive(false);
     }
 }

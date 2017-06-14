@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour {
 
     public bool inContact = false;
     public bool recovering = false;
+    private bool dead = false;
 
     public float force = 50f;
     
@@ -53,6 +54,14 @@ public class PlayerController : MonoBehaviour {
         anim.SetFloat("speed", speed);
         anim.SetFloat("forwardVelocity", forward * speed);
         anim.SetFloat("turnVelocity", body.angularVelocity.y);
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, 100))
+        {
+            Vector3 lookHere = ray.GetPoint(10);
+            transform.LookAt(new Vector3(lookHere.x, transform.position.y, lookHere.z));
+        }
 
         //float x = Input.GetAxis("Horizontal");
         //float y = Input.GetAxis("Vertical");
@@ -101,9 +110,10 @@ public class PlayerController : MonoBehaviour {
     {
         if (health <= 0 && prevHealth > 0)
         {
-            anim.SetTrigger("dying");
             recovering = true; // This is setting everything to stop fuctioning
-
+            anim.SetTrigger("dying");
+            GameManager.instance.GameOver.gameObject.SetActive(true);
+            dead = true;
         }
         else if (health < prevHealth && prevHealth > 0)
         {
@@ -115,7 +125,9 @@ public class PlayerController : MonoBehaviour {
     {
         if (c.gameObject.tag == "Slime")
         {
+            if (dead == true) return;
             health.TakeDamage(1);
+
         }
     }
 
@@ -123,6 +135,7 @@ public class PlayerController : MonoBehaviour {
     {
         if (c.gameObject.tag == ("enemyWeapon"))
         {
+            if (dead == true) return;
             AudioManager.PlayVariedEffect("Slap", 0.1f);
             health.TakeDamage(1);
         }
@@ -135,7 +148,7 @@ public class PlayerController : MonoBehaviour {
         weapon.gameObject.SetActive(true);
         StartCoroutine("KnockBackRecovery");
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.8f);
 
         weapon.gameObject.SetActive(false);
     }

@@ -22,6 +22,8 @@ public class EnemyController : MonoBehaviour
     Vector3 targetVelocity;
     Vector3 targetFacing;
 
+    private bool dead = false;
+
     void Start()
     {
         anim = GetComponent<Animator>();
@@ -39,6 +41,7 @@ public class EnemyController : MonoBehaviour
             anim.SetTrigger("dying");
             StopAllCoroutines();
             weapon.gameObject.SetActive(false);
+            dead = true;
 
         }
         else if (health < prevHealth && prevHealth > 0)
@@ -135,8 +138,10 @@ public class EnemyController : MonoBehaviour
 
     void OnTriggerEnter(Collider c)
     {
-        if (c.gameObject.tag == ("playerWeapon"))
+        if (c.gameObject.tag == "playerWeapon")
         {
+            if (dead == true) return;
+            Debug.Log("HERE");
             AudioManager.PlayVariedEffect("Slap", 0.1f);
             health.TakeDamage(2);
         }

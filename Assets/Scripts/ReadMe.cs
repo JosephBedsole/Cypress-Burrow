@@ -3,62 +3,77 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ReadMe : MonoBehaviour {
-    public static ReadMe read;
+    //public static ReadMe read;
 
-    public bool near = false;
-    public bool hello = false;
+    //public bool near = false;
+    //public bool hey = false;
+    //public bool shop = false;
 
 
 
-    void Awake()
-    {
-        if (read == null)
-        {
-            read = this;
-        }
-    }
 
-    void Update()
-    {
-        if (near == true)
-        {
-            if (hello == false)
-            {
-                if (Input.GetButtonDown("Jump"))
-                {
-                    GameManager.instance.pressAButton.gameObject.SetActive(false);
-                    GameManager.instance.hello.gameObject.SetActive(true);
-                    hello = true;
-                }
-            }
-            else if (hello == true)
-            {
-                if (Input.GetButtonDown("Jump"))
-                {
-                    GameManager.instance.hello.gameObject.SetActive(false);
-                    hello = false;
-                }
-            }
-        }
-    }
+    //void Awake()
+    //{
+    //    if (read == null)
+    //    {
+    //        read = this;
+    //    }
+    //}
 
-    void OnTriggerEnter(Collider c)
-    {
-        if (c.gameObject.tag == "Player")
-        {
-            near = true;
-            GameManager.instance.pressAButton.gameObject.SetActive(true);
-        }
-    }
+    //void Update()
+    //{
+    //    if (near == true)
+    //    {
+    //        if (hey == false)
+    //        {
+    //            if (Input.GetKeyDown(KeyCode.E))
+    //            {
+    //                GameManager.instance.pressEToTalk.gameObject.SetActive(false);
+    //                GameManager.instance.heyImSlime.gameObject.SetActive(true);
+                    
+    //                hey = true;
+    //            }
+    //        }
+    //        else if (hey == true && shop == false)
+    //        {
+    //            if (Input.GetKeyDown(KeyCode.E))
+    //            {
+    //                GameManager.instance.heyImSlime.gameObject.SetActive(false);
+    //                GameManager.instance.myShopIsComingSoon.gameObject.SetActive(true);
+    //                hey = false;
+    //            }
+    //        }
+    //        else if (shop == true)
+    //        {
+    //            if (Input.GetKeyDown(KeyCode.E))
+    //            {
+    //                GameManager.instance.myShopIsComingSoon.gameObject.SetActive(false);
+    //                shop = false;
+    //            }
+    //        }
+    //    }
+    //}
 
-    private void OnTriggerExit(Collider c)
-    {
-        if (c.gameObject.tag == "Player")
-        {
-            near = false;
-            hello = false;
-            GameManager.instance.pressAButton.gameObject.SetActive(false);
-            GameManager.instance.hello.gameObject.SetActive(false);
-        }
-    }
+    //void OnTriggerEnter(Collider c)
+    //{
+    //    if (c.gameObject.tag == "Player")
+    //    {
+    //        near = true;
+    //        GameManager.instance.pressEToTalk.gameObject.SetActive(true);
+    //    }
+    //}
+
+    //private void OnTriggerExit(Collider c)
+    //{
+    //    if (c.gameObject.tag == "Player")
+    //    {
+    //        near = false;
+    //        hey = false;
+    //        shop = false;
+
+    //        GameManager.instance.pressEToTalk.gameObject.SetActive(false);
+    //        GameManager.instance.heyImSlime.gameObject.SetActive(false);
+    //        GameManager.instance.myShopIsComingSoon.gameObject.SetActive(false);
+    //    }
+    //}
 }
