@@ -23,7 +23,9 @@ public class GameManager : MonoBehaviour {
 
     public Text pressEToUse;
     public Text pressEToTalk;
+
     public Text youCantDoThat;
+    public Text youGotFullHealth;
 
     public Text sceneChangeTitle;
     public Text GameOver;

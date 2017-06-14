@@ -139,6 +139,12 @@ public class PlayerController : MonoBehaviour {
             AudioManager.PlayVariedEffect("Slap", 0.1f);
             health.TakeDamage(1);
         }
+        if (c.gameObject.tag == ("FireSpitters"))
+        {
+            if (dead == true) return;
+            AudioManager.PlayVariedEffect("Slap", 0.1f);
+            health.TakeDamage(1);
+        }
     }
 
     IEnumerator meleeAttack()

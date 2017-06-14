@@ -1319,7 +1319,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1148231778}
-  - component: {fileID: 1148231779}
   m_Layer: 0
   m_Name: Menu Elements
   m_TagString: Untagged
@@ -1344,13 +1343,6 @@ Transform:
   m_Father: {fileID: 1075916551}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!362 &1148231779
-WorldAnchor:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1148231777}
-  serializedVersion: 2
 --- !u!1 &1153387729
 GameObject:
   m_ObjectHideFlags: 0
@@ -2057,7 +2049,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1836599546}
-  - component: {fileID: 1836599547}
   m_Layer: 0
   m_Name: TitleHolder
   m_TagString: Untagged
@@ -2080,13 +2071,6 @@ Transform:
   m_Father: {fileID: 1075916551}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!362 &1836599547
-WorldAnchor:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1836599545}
-  serializedVersion: 2
 --- !u!1 &1874117786
 GameObject:
   m_ObjectHideFlags: 0

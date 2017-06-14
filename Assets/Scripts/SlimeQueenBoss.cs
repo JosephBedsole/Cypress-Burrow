@@ -21,6 +21,8 @@ public class SlimeQueenBoss : MonoBehaviour {
     private HealthController health;
     private Rigidbody body;
     public ParticleSystem splatter;
+    public Animator anim;
+    public Animation jump;
 
     Vector3 targetVelocity;
     Vector3 targetFacing;
@@ -34,6 +36,7 @@ public class SlimeQueenBoss : MonoBehaviour {
     {
         body = GetComponent<Rigidbody>();
         health = GetComponent<HealthController>();
+        anim = GetComponent<Animator>();
         health.onHealthChanged += AnimateHealth;
         StartCoroutine("AttackCoroutine");
         
@@ -118,8 +121,6 @@ public class SlimeQueenBoss : MonoBehaviour {
             Debug.Log("The player is close to me");
             yield return new WaitForSeconds(10);
             StartCoroutine("SlingAttack");
-            yield return new WaitForSeconds(5);
-            StartCoroutine("JumpAttack");
         }
     }
 
@@ -137,18 +138,18 @@ public class SlimeQueenBoss : MonoBehaviour {
         }
     }
 
-    IEnumerator JumpAttack()
-    {
-        Debug.Log("JumpAttack");
-        recovering = true;
-        // Play the JumpAnim
-        yield return new WaitForSeconds(1);
-        recovering = false;
-        yield return new WaitForSeconds(3);
-        recovering = true;
-        yield return new WaitForSeconds(1);
-        recovering = false;
-    }
+    //IEnumerator JumpAttack()
+    //{
+    //    Debug.Log("JumpAttack");
+    //    recovering = true;
+    //    anim.Play("JumpingAnim");
+    //    yield return new WaitForSeconds(1);
+    //    recovering = false;
+    //    yield return new WaitForSeconds(3);
+    //    recovering = true;
+    //    yield return new WaitForSeconds(1);
+    //    recovering = false;
+    //}
 
     IEnumerator DisplayText()
     {

@@ -10,6 +10,7 @@ TagManager:
   - Slime
   - RotatingBlades
   - NPC
+  - FireSpitters
   layers:
   - Default
   - TransparentFX
